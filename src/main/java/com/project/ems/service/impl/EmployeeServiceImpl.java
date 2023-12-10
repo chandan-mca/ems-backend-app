@@ -2,6 +2,7 @@ package com.project.ems.service.impl;
 
 import com.project.ems.dto.EmployeeDto;
 import com.project.ems.entity.Employee;
+import com.project.ems.exception.ResourceNotFoundException;
 import com.project.ems.mapper.EmployeeMapper;
 import com.project.ems.repository.EmployeeRepository;
 import com.project.ems.service.EmployeeService;
@@ -25,5 +26,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //convert employee JPA entity to employeeDto and return
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeById(Long employeeId) {
+
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employee not exists with the given id : " + employeeId));
+
+        return EmployeeMapper.mapToEmployeeDto(employee);
     }
 }
